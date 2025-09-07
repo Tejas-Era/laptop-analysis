@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Gap Analysis | HP vs Lenovo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --hp-blue: #0096D6;
+            --lenovo-red: #E2231A;
+            --dark-bg: #212529;
+            --light-bg: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            padding-top: 80px;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, var(--hp-blue) 50%, var(--lenovo-red) 50%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 40px;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .hp-card {
+            border-bottom: 5px solid var(--hp-blue);
+        }
+        
+        .lenovo-card {
+            border-bottom: 5px solid var(--lenovo-red);
+        }
+        
+        .comparison-table {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #343a40 0%, #212529 100%);
+            color: white;
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .hp-bg {
+            background-color: rgba(0, 150, 214, 0.08);
+        }
+        
+        .lenovo-bg {
+            background-color: rgba(226, 35, 26, 0.08);
+        }
+        
+        .tab-content {
+            padding: 25px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            background: white;
+        }
+        
+        .nav-tabs .nav-link {
+            font-weight: 600;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            color: #495057;
+            transition: all 0.3s;
+        }
+        
+        .nav-tabs .nav-link.active {
+            border-bottom: 4px solid var(--hp-blue);
+            background: white;
+            color: var(--hp-blue);
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .hp-color {
+            color: var(--hp-blue);
+        }
+        
+        .lenovo-color {
+            color: var(--lenovo-red);
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+        
+        .social-icon {
+            font-size: 1.8rem;
+            margin-right: 20px;
+            color: white;
+            transition: transform 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 320px;
+            margin-bottom: 35px;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .research-card {
+            transition: all 0.3s;
+            border-left: 5px solid transparent;
+        }
+        
+        .research-card:hover {
+            border-left: 5px solid #6c757d;
+        }
+        
+        .btn-hp {
+            background: linear-gradient(to right, var(--hp-blue), #007ab3);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-hp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 150, 214, 0.4);
+            color: white;
+        }
+        
+        .btn-lenovo {
+            background: linear-gradient(to right, var(--lenovo-red), #c21a12);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-lenovo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(226, 35, 26, 0.4);
+            color: white;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--hp-blue) 50%, var(--lenovo-red) 50%);
+            border-radius: 2px;
+        }
+        
+        .flipkart-review {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .flipkart-review:hover {
+            transform: translateY(-5px);
+        }
+        
+        .rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .pdf-preview {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pdf-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .data-source-card {
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .data-source-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        /* Laptop Finder Styles */
+        .finder-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        
+        .finder-step {
+            display: none;
+        }
+        
+        .finder-step.active {
+            display: block;
+        }
+        
+        .option-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-card:hover {
+            border-color: var(--hp-blue);
+            transform: translateY(-3px);
+        }
+        
+        .option-card.selected {
+            border-color: var(--hp-blue);
+            background-color: rgba(0, 150, 214, 0.05);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        .result-card {
+            border-left: 5px solid var(--hp-blue);
+        }
+        
+        .result-card.lenovo {
+            border-left-color: var(--lenovo-red);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-laptop-code me-2"></i> LaptopGapAnalysis
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#comparison"><i class="fas fa-balance-scale me-1"></i> Comparison</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#research"><i class="fas fa-chart-bar me-1"></i> Research</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#data-sources"><i class="fas fa-database me-1"></i> Data Sources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#laptop-finder"><i class="fas fa-laptop me-1"></i> Laptop Finder</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">HP vs Lenovo Laptop Analysis</h1>
+            <p class="lead mb-4">A comprehensive gap analysis based on customer reviews, technical specifications, and market data</p>
+            <a href="#comparison" class="btn btn-light btn-lg me-3">View Comparison</a>
+            <a href="#laptop-finder" class="btn btn-outline-light btn-lg">Find Your Laptop</a>
+        </div>
+    </section>
+
+    <!-- Key Stats -->
+    <section class="container mb-5">
+        <h2 class="section-title">Key Statistics</h2>
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="card p-4">
+                    <div class="card-body">
+                        <div class="feature-icon hp-color">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="stat-number hp-color">4.2/5</p>
+                        <p class="card-text fw-semibold">Average HP Rating</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card p-4">
+                    <div class="card-body">
+                        <div class="feature-icon lenovo-color">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="stat-number lenovo-color">4.4/5</p>
+                        <p class="card-text fw-semibold">Average Lenovo Rating</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card p-4">
+                    <div class="card-body">
+                        <div class="feature-icon text-dark">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <p class="stat-number">78%</p>
+                        <p class="card-text fw-semibold">Customer Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card p-4">
+                    <div class="card-body">
+                        <div class="feature-icon text-dark">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <p class="stat-number">2500+</p>
+                        <p class="card-text fw-semibold">Reviews Analyzed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="container mb-5">
+        <h2 class="section-title">Technical Comparison</h2>
+        
+        <!-- Tabs for different comparison aspects -->
+        <ul class="nav nav-tabs mb-4" id="comparisonTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs">Specifications</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="price-tab" data-bs-toggle="tab" data-bs-target="#price">Pricing</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="performance-tab" data-bs-toggle="tab" data-bs-target="#performance">Performance</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="comparisonTabsContent">
+            <div class="tab-pane fade show active" id="specs">
+                <div class="table-responsive">
+                    <table class="table table-bordered comparison-table">
+                        <thead>
+                            <tr>
+                                <th width="25%">Feature</th>
+                                <th width="37.5%">HP Pavilion</th>
+                                <th width="37.5%">Lenovo IdeaPad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Processor</td>
+                                <td class="hp-bg">Intel i5-1135G7</td>
+                                <td class="lenovo-bg">AMD Ryzen 5 5500U</td>
+                            </tr>
+                            <tr>
+                                <td>RAM</td>
+                                <td class="hp-bg">8GB DDR4</td>
+                                <td class="lenovo-bg">8GB DDR4</td>
+                            </tr>
+                            <tr>
+                                <td>Storage</td>
+                                <td class="hp-bg">512GB SSD</td>
+                                <td class="lenovo-bg">256GB SSD + 1TB HDD</td>
+                            </tr>
+                            <tr>
+                                <td>Display</td>
+                                <td class="hp-bg">15.6" FHD IPS</td>
+                                <td class="lenovo-bg">14" FHD IPS</td>
+                            </tr>
+                            <tr>
+                                <td>Graphics</td>
+                                <td class="hp-bg">NVIDIA MX350</td>
+                                <td class="lenovo-bg">Integrated AMD</td>
+                            </tr>
+                            <tr>
+                                <td>Battery Life</td>
+                                <td class="hp-bg">Up to 7 hours</td>
+                                <td class="lenovo-bg">Up to 8 hours</td>
+                            </tr>
+                            <tr>
+                                <td>Weight</td>
+                                <td class="hp-bg">1.75 kg</td>
+                                <td class="lenovo-bg">1.41 kg</td>
+                            </tr>
+                            <tr>
+                                <td>Warranty</td>
+                                <td class="hp-bg">1 year</td>
+                                <td class="lenovo-bg">2 years</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="price">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card hp-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon hp-color">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <h5 class="card-title">HP Pricing</h5>
+                                <p class="display-6 hp-color fw-bold">$799</p>
+                                <p class="card-text">Starting price for base model</p>
+                                <ul class="list-group list-group-flush mb-4">
+                                    <li class="list-group-item">Mid-range: $999</li>
+                                    <li class="list-group-item">Premium: $1299</li>
+                                    <li class="list-group-item">Sales discount: up to 15%</li>
+                                </ul>
+                                <button class="btn btn-hp">Check Best Deals</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card lenovo-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="feature-icon lenovo-color">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <h5 class="card-title">Lenovo Pricing</h5>
+                                <p class="display-6 lenovo-color fw-bold">$749</p>
+                                <p class="card-text">Starting price for base model</p>
+                                <ul class="list-group list-group-flush mb-4">
+                                    <li class="list-group-item">Mid-range: $949</li>
+                                    <li class="list-group-item">Premium: $1199</li>
+                                    <li class="list-group-item">Sales discount: up to 20%</li>
+                                </ul>
+                                <button class="btn btn-lenovo">Check Best Deals</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="performance">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <canvas id="batteryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="chart-container">
+                            <canvas id="valueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research" class="container mb-5">
+        <h2 class="section-title">Research Data</h2>
+        
+        <div class="row">
+            <!-- Survey Results -->
+            <div class="col-lg-6 mb-4">
+                <div class="card research-card h-100">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0"><i class="fas fa-poll me-2"></i> Survey Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="surveyChart"></canvas>
+                        </div>
+                        <p class="mt-3 text-muted">Based on 327 responses collected via Google Forms</p>
+                        <div class="text-center mt-4">
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeHko9HpEir_yhGNT-I279adsQ6EturIDQ6LEsBn42lJDs5Ag/viewform?usp=header" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>View Survey Form
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Customer Ratings -->
+            <div class="col-lg-6 mb-4">
+                <div class="card research-card h-100">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="mb-0"><i class="fas fa-star me-2"></i> Customer Ratings Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="ratingChart"></canvas>
+                        </div>
+                        <p class="mt-3 text-muted">Analysis of 2,500+ customer reviews from multiple sources</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Sources Section -->
+    <section id="data-sources" class="container mb-5">
+        <h2 class="section-title">Data Sources & Reports</h2>
+        
+        <div class="row">
+            <!-- Flipkart Analysis -->
+            <div class="col-md-4 mb-4">
+                <div class="card data-source-card">
+                    <div class="card-header bg-warning text-dark py-3">
+                        <h5 class="mb-0"><i class="fab fa-flipkart me-2"></i> Flipkart Analysis</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="feature-icon text-warning">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h5 class="card-title">Comprehensive Flipkart Review Analysis</h5>
+                        <p class="card-text">Detailed analysis of 1,200+ customer reviews from Flipkart</p>
+                        
+                        <div class="pdf-preview mb-3">
+                            <i class="fas fa-file-pdf text-danger" style="font-size: 3rem;"></i>
+                            <p class="mt-2 mb-1">Flipkart_Analysis_Report.pdf</p>
+                            <small class="text-muted">1.8 MB</small>
+                        </div>
+                        
+                        <a href="https://1drv.ms/x/c/04141b5ef6ae46d9/EQK5qFFTTl1EnYNVw3iOM28BSXa7cR2rB2dRv89_8vRBow?e=F7zrHc" class="btn btn-warning mt-2" target="_blank">
+                            <i class="fas fa-download me-2"></i>Download PDF Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Amazon Analysis -->
+            <div class="col-md-4 mb-4">
+                <div class="card data-source-card">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0"><i class="fab fa-amazon me-2"></i> Amazon Analysis</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="feature-icon text-primary">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h5 class="card-title">Amazon Customer Sentiment Report</h5>
+                        <p class="card-text">Analysis of 1,300+ reviews from Amazon customers</p>
+                        
+                        <div class="pdf-preview mb-3">
+                            <i class="fas fa-file-pdf text-danger" style="font-size: 3rem;"></i>
+                            <p class="mt-2 mb-1">Amazon_Analysis_Report.pdf</p>
+                            <small class="text-muted">2.1 MB</small>
+                        </div>
+                        
+                        <a href="https://1drv.ms/x/c/73f865d5a97df27e/EUZ_kRnAwdJKpqMS96RndVsBada6mG-kOSjYT0zctBcBKg?e=r26ccW" class="btn btn-primary mt-2" target="_blank">
+                            <i class="fas fa-download me-2"></i>Download PDF Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Offline Store Analysis -->
+            <div class="col-md-4 mb-4">
+                <div class="card data-source-card">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="mb-0"><i class="fas fa-store me-2"></i> Offline Store Analysis</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="feature-icon text-success">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h5 class="card-title">Offline Market Research</h5>
+                        <p class="card-text">Data collected from 15+ retail stores across the city</p>
+                        
+                        <div class="pdf-preview mb-3">
+                            <i class="fas fa-file-pdf text-danger" style="font-size: 3rem;"></i>
+                            <p class="mt-2 mb-1">Offline_Research_Report.pdf</p>
+                            <small class="text-muted">2.5 MB</small>
+                        </div>
+                        
+                        <a href="https://1drv.ms/x/c/73f865d5a97df27e/EUZ_kRnAwdJKpqMS96RndVsBada6mG-kOSjYT0zctBcBKg?e=r26ccW" class="btn btn-success mt-2" target="_blank">
+                            <i class="fas fa-download me-2"></i>Download PDF Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Laptop Finder Tool -->
+    <section id="laptop-finder" class="container mb-5">
+        <h2 class="section-title">Laptop Finder Tool</h2>
+        
+        <div class="finder-container">
+            <div class="progress mb-4">
+                <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            
+            <!-- Step 1: Primary Use -->
+            <div class="finder-step active" id="step1">
+                <h3 class="mb-4">What will be your primary use for this laptop?</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="basic">
+                            <h5><i class="fas fa-file-alt me-2"></i> Basic Tasks</h5>
+                            <p class="mb-0">Web browsing, document editing, presentations</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="student">
+                            <h5><i class="fas fa-graduation-cap me-2"></i> Student Use</h5>
+                            <p class="mb-0">Research, assignments, online classes</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="business">
+                            <h5><i class="fas fa-briefcase me-2"></i> Business/Work</h5>
+                            <p class="mb-0">Office applications, multitasking, meetings</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="creative">
+                            <h5><i class="fas fa-paint-brush me-2"></i> Creative Work</h5>
+                            <p class="mb-0">Photo editing, video editing, design</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="gaming">
+                            <h5><i class="fas fa-gamepad me-2"></i> Gaming</h5>
+                            <p class="mb-0">Casual to high-performance gaming</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="development">
+                            <h5><i class="fas fa-code me-2"></i> Programming/Development</h5>
+                            <p class="mb-0">Coding, software development, testing</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg" onclick="nextStep(1)">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Budget -->
+            <div class="finder-step" id="step2">
+                <h3 class="mb-4">What is your budget range?</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="budget">
+                            <h5><i class="fas fa-indian-rupee-sign me-2"></i> Budget (Under ₹50,000)</h5>
+                            <p class="mb-0">Basic to mid-range specifications</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="mid">
+                            <h5><i class="fas fa-indian-rupee-sign me-2"></i> Mid-Range (₹50,000 - ₹80,000)</h5>
+                            <p class="mb-0">Good performance for most tasks</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="high">
+                            <h5><i class="fas fa-indian-rupee-sign me-2"></i> High-End (₹80,000 - ₹1,20,000)</h5>
+                            <p class="mb-0">Premium performance and features</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="premium">
+                            <h5><i class="fas fa-indian-rupee-sign me-2"></i> Premium (Above ₹1,20,000)</h5>
+                            <p class="mb-0">Top-tier performance and build quality</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-secondary me-3" onclick="prevStep(2)"><i class="fas fa-arrow-left me-2"></i> Back</button>
+                    <button class="btn btn-primary" onclick="nextStep(2)">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Priority -->
+            <div class="finder-step" id="step3">
+                <h3 class="mb-4">What is most important to you?</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="performance">
+                            <h5><i class="fas fa-tachometer-alt me-2"></i> Performance</h5>
+                            <p class="mb-0">Fast processing speed and responsiveness</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="battery">
+                            <h5><i class="fas fa-battery-full me-2"></i> Battery Life</h5>
+                            <p class="mb-0">Long-lasting battery for all-day use</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="portability">
+                            <h5><i class="fas fa-weight-hanging me-2"></i> Portability</h5>
+                            <p class="mb-0">Lightweight and easy to carry</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="display">
+                            <h5><i class="fas fa-desktop me-2"></i> Display Quality</h5>
+                            <p class="mb-0">High-resolution, color-accurate screen</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="build">
+                            <h5><i class="fas fa-cube me-2"></i> Build Quality</h5>
+                            <p class="mb-0">Durable materials and solid construction</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="value">
+                            <h5><i class="fas fa-hand-holding-usd me-2"></i> Value for Money</h5>
+                            <p class="mb-0">Best features for your budget</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-secondary me-3" onclick="prevStep(3)"><i class="fas fa-arrow-left me-2"></i> Back</button>
+                    <button class="btn btn-primary" onclick="nextStep(3)">Next <i class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Brand Preference -->
+            <div class="finder-step" id="step4">
+                <h3 class="mb-4">Do you have a brand preference?</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="hp">
+                            <h5 class="hp-color"><i class="fas fa-laptop me-2"></i> HP</h5>
+                            <p class="mb-0">Known for reliability and performance</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card" data-value="lenovo">
+                            <h5 class="lenovo-color"><i class="fas fa-laptop me-2"></i> Lenovo</h5>
+                            <p class="mb-0">Known for innovation and keyboard quality</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="option-card" data-value="no-preference">
+                            <h5><i class="fas fa-random me-2"></i> No Preference</h5>
+                            <p class="mb-0">Recommend the best option for my needs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-secondary me-3" onclick="prevStep(4)"><i class="fas fa-arrow-left me-2"></i> Back</button>
+                    <button class="btn btn-primary" onclick="nextStep(4)">See Results <i class="fas fa-arrow-right ms-2"></i></button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="finder-step" id="results">
+                <h3 class="mb-4">Recommended Laptop For You</h3>
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <div class="card result-card">
+                            <div class="card-body text-center">
+                                <div class="feature-icon hp-color">
+                                    <i class="fas fa-laptop"></i>
+                                </div>
+                                <h4 class="hp-color">HP Pavilion 15</h4>
+                                <p class="lead">Based on your needs, we recommend this model</p>
+                                
+                                <div class="row text-start mt-4">
+                                    <div class="col-md-6">
+                                        <h6>Key Specifications:</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Intel Core i5-1135G7 Processor</li>
+                                            <li class="list-group-item">8GB DDR4 RAM</li>
+                                            <li class="list-group-item">512GB SSD Storage</li>
+                                            <li class="list-group-item">15.6" FHD Display</li>
+                                            <li class="list-group-item">NVIDIA MX350 Graphics</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Why this model:</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Excellent performance for your needs</li>
+                                            <li class="list-group-item">Fits within your budget range</li>
+                                            <li class="list-group-item">Good battery life (up to 7 hours)</li>
+                                            <li class="list-group-item">Quality display for your usage</li>
+                                            <li class="list-group-item">Positive customer reviews</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <a href="#comparison" class="btn btn-hp me-3">View Detailed Comparison</a>
+                                    <a href="#" class="btn btn-outline-secondary">Check Best Price</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" onclick="restartFinder()"><i class="fas fa-redo me-2"></i> Start Over</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Laptop Gap Analysis</h5>
+                    <p>A comprehensive comparison between HP and Lenovo laptops based on multiple data sources.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#comparison" class="text-white text-decoration-none">Comparison</a></li>
+                        <li><a href="#research" class="text-white text-decoration-none">Research Data</a></li>
+                        <li><a href="#data-sources" class="text-white text-decoration-none">Data Sources</a></li>
+                        <li><a href="#laptop-finder" class="text-white text-decoration-none">Laptop Finder</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Connect With Us</h5>
+                    <a href="mailto:socialcrew@gmail.com" class="social-icon"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.instagram.com/socialcrew__media?igsh=eWc4OWJqdTMzMWpl" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <p class="mt-3">Contact: socialcrew@gmail.com</p>
+                </div>
+            </div>
+            <hr class="mt-4 bg-light">
+            <p class="text-center mb-0">© 2023 Laptop Gap Analysis Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & Chart.js Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize charts after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Performance Comparison Chart
+            const perfCtx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(perfCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Processing Power', 'Graphics', 'Battery Life', 'Build Quality', 'Display', 'Value for Money'],
+                    datasets: [
+                        {
+                            label: 'HP',
+                            data: [85, 82, 78, 80, 83, 75],
+                             backgroundColor: 'rgba(0, 150, 214, 0.2)',
+borderColor: 'rgba(0, 150, 214, 1)',
+pointBackgroundColor: 'rgba(0, 150, 214, 1)',
+pointBorderColor: '#fff',
+pointHoverBackgroundColor: '#fff',
+pointHoverBorderColor: 'rgba(0, 150, 214, 1)'
+},
+{
+label: 'Lenovo',
+data: [88, 75, 85, 85, 80, 88],
+backgroundColor: 'rgba(226, 35, 26, 0.2)',
+borderColor: 'rgba(226, 35, 26, 1)',
+pointBackgroundColor: 'rgba(226, 35, 26, 1)',
+pointBorderColor: '#fff',
+pointHoverBackgroundColor: '#fff',
+pointHoverBorderColor: 'rgba(226, 35, 26, 1)'
+}
+]
+},
+options: {
+responsive: true,
+plugins: {
+title: {
+display: true,
+text: 'Performance Comparison',
+font: {
+size: 16,
+weight: 'bold'
+}
+},
+legend: {
+position: 'bottom',
+}
+},
+scales: {
+r: {
+angleLines: {
+display: true
+},
+suggestedMin: 50,
+suggestedMax: 100
+}
+}
+}
+});
+
+        // Battery Life Chart
+        const batteryCtx = document.getElementById('batteryChart').getContext('2d');
+        const batteryChart = new Chart(batteryCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Web Browsing', 'Video Playback', 'Gaming', 'Programming'],
+                datasets: [
+                    {
+                        label: 'HP (hours)',
+                        data: [7.2, 6.8, 2.5, 5.5],
+                        backgroundColor: 'rgba(0, 150, 214, 0.7)',
+                        borderColor: 'rgba(0, 150, 214, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Lenovo (hours)',
+                        data: [8.5, 7.8, 3.2, 6.2],
+                        backgroundColor: 'rgba(226, 35, 26, 0.7)',
+                        borderColor: 'rgba(226, 35, 26, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Battery Life by Usage',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Value for Money Chart
+        const valueCtx = document.getElementById('valueChart').getContext('2d');
+        const valueChart = new Chart(valueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Base Model', 'Mid-Range', 'Premium', 'Business'],
+                datasets: [
+                    {
+                        label: 'HP Value Score',
+                        data: [75, 80, 70, 85],
+                        borderColor: 'rgba(0, 150, 214, 1)',
+                        backgroundColor: 'rgba(0, 150, 214, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: 'rgba(0, 150, 214, 1)',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Lenovo Value Score',
+                        data: [85, 82, 88, 90],
+                        borderColor: 'rgba(226, 35, 26, 1)',
+                        backgroundColor: 'rgba(226, 35, 26, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: 'rgba(226, 35, 26, 1)',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Value for Money Comparison',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 70,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Score'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Survey Results Chart
+        const surveyCtx = document.getElementById('surveyChart').getContext('2d');
+        const surveyChart = new Chart(surveyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Prefer HP', 'Prefer Lenovo', 'No Preference'],
+                datasets: [{
+                    data: [42, 48, 10],
+                    backgroundColor: [
+                        'rgba(0, 150, 214, 0.8)',
+                        'rgba(226, 35, 26, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Brand Preference Survey',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+
+        // Rating Analysis Chart
+        const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+        const ratingChart = new Chart(ratingCtx, {
+            type: 'bar',
+            data: {
+                labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+                datasets: [
+                    {
+                        label: 'HP Ratings',
+                        data: [45, 25, 15, 10, 5],
+                        backgroundColor: 'rgba(0, 150, 214, 0.7)',
+                        borderColor: 'rgba(0, 150, 214, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Lenovo Ratings',
+                        data: [50, 28, 12, 6, 4],
+                        backgroundColor: 'rgba(226, 35, 26, 0.7)',
+                        borderColor: 'rgba(226, 35, 26, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Customer Rating Distribution',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Percentage of Reviews'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Initialize laptop finder
+        initLaptopFinder();
+    });
+
+    // Laptop Finder Functionality
+    let userPreferences = {
+        usage: '',
+        budget: '',
+        priority: '',
+        brand: ''
+    };
+
+    function initLaptopFinder() {
+        // Add click event to option cards
+        const optionCards = document.querySelectorAll('.option-card');
+        optionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from siblings
+                const parent = this.closest('.row');
+                const siblings = parent.querySelectorAll('.option-card');
+                siblings.forEach(sibling => sibling.classList.remove('selected'));
+                
+                // Add selected class to clicked card
+                this.classList.add('selected');
+            });
+        });
+    }
+
+    function nextStep(currentStep) {
+        // Get selected value
+        const activeStep = document.getElementById(`step${currentStep}`);
+        const selectedOption = activeStep.querySelector('.option-card.selected');
+        
+        if (!selectedOption) {
+            alert('Please select an option to continue');
+            return;
+        }
+        
+        // Store the selected value
+        const value = selectedOption.getAttribute('data-value');
+        if (currentStep === 1) userPreferences.usage = value;
+        if (currentStep === 2) userPreferences.budget = value;
+        if (currentStep === 3) userPreferences.priority = value;
+        if (currentStep === 4) userPreferences.brand = value;
+        
+        // Update progress bar
+        const progressPercentage = (currentStep / 4) * 100;
+        document.querySelector('.progress-bar').style.width = `${progressPercentage}%`;
+        
+        // Hide current step and show next
+        activeStep.classList.remove('active');
+        
+        if (currentStep < 4) {
+            document.getElementById(`step${currentStep + 1}`).classList.add('active');
+        } else {
+            // Show results
+            document.getElementById('results').classList.add('active');
+            updateResults();
+        }
+    }
+
+    function prevStep(currentStep) {
+        // Update progress bar
+        const progressPercentage = ((currentStep - 2) / 4) * 100;
+        document.querySelector('.progress-bar').style.width = `${progressPercentage}%`;
+        
+        // Hide current step and show previous
+        document.getElementById(`step${currentStep}`).classList.remove('active');
+        document.getElementById(`step${currentStep - 1}`).classList.add('active');
+    }
+
+    function updateResults() {
+        // Based on user preferences, show appropriate recommendation
+        // This is a simplified version - in a real application, you would have more complex logic
+        const resultCard = document.querySelector('.result-card');
+        const resultTitle = resultCard.querySelector('h4');
+        const resultReason = resultCard.querySelector('.lead');
+        
+        // Simple recommendation logic
+        if (userPreferences.brand === 'hp') {
+            resultTitle.className = 'hp-color';
+            resultTitle.innerHTML = '<i class="fas fa-laptop me-2"></i> HP Pavilion 15';
+            resultReason.textContent = 'Based on your preference for HP, we recommend this model';
+        } else if (userPreferences.brand === 'lenovo') {
+            resultTitle.className = 'lenovo-color';
+            resultTitle.innerHTML = '<i class="fas fa-laptop me-2"></i> Lenovo IdeaPad 5';
+            resultReason.textContent = 'Based on your preference for Lenovo, we recommend this model';
+        } else {
+            // No brand preference - recommend based on other factors
+            if (userPreferences.priority === 'battery' || userPreferences.priority === 'portability') {
+                resultTitle.className = 'lenovo-color';
+                resultTitle.innerHTML = '<i class="fas fa-laptop me-2"></i> Lenovo IdeaPad 5';
+                resultReason.textContent = 'Based on your need for battery life and portability, we recommend this model';
+            } else {
+                resultTitle.className = 'hp-color';
+                resultTitle.innerHTML = '<i class="fas fa-laptop me-2"></i> HP Pavilion 15';
+                resultReason.textContent = 'Based on your needs, we recommend this HP model';
+            }
+        }
+    }
+
+    function restartFinder() {
+        // Reset user preferences
+        userPreferences = {
+            usage: '',
+            budget: '',
+            priority: '',
+            brand: ''
+        };
+        
+        // Reset UI
+        document.querySelectorAll('.option-card.selected').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        document.querySelector('.progress-bar').style.width = '0%';
+        
+        document.getElementById('results').classList.remove('active');
+        document.getElementById('step1').classList.add('active');
+    }
+</script>
